@@ -1,0 +1,8 @@
+{
+  "tasks": {
+    "start": "deno run --allow-read src/index.ts"
+  },
+  "imports": {
+    "date-utils-pro": "./src/index.ts"
+  }
+}
