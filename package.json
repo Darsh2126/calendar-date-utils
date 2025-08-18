@@ -13,6 +13,9 @@
     "lint": "eslint . --ext .ts,.js",
     "prepare": "npm run build"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Darsh2126/calendar-date-utils.git"
