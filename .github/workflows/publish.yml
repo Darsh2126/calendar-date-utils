@@ -2,8 +2,8 @@ name: Publish to npm
 
 on:
   push:
-    tags:
-      - 'v*'   # Runs only when you push a git tag like v1.0.1
+    branches:
+      - main   # runs when you push to main
 
 jobs:
   build-and-publish:
@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # needed for tags
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -28,6 +30,18 @@ jobs:
 
       - name: Build package
         run: npm run build
+
+      - name: Bump version and tag
+        run: |
+          npm version patch -m "chore(release): %s"
+          git push origin HEAD --tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure npm auth
+        run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_WORKFLOW }}
 
       - name: Publish to npm
         run: npm publish --access public
