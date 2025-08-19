@@ -3,7 +3,11 @@ name: Publish to npm
 on:
   push:
     branches:
-      - main   # runs when you push to main
+      - main   # only run on pushes to main
+
+permissions:
+  contents: write   # needed for pushing tags
+  packages: write   # needed for npm publish
 
 jobs:
   build-and-publish:
@@ -13,7 +17,12 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # needed for tags
+          fetch-depth: 0   # ensure tags are available
+
+      - name: Setup Git identity
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -21,27 +30,23 @@ jobs:
           node-version: 20
           registry-url: "https://registry.npmjs.org/"
           always-auth: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_WORKFLOW }}
 
       - name: Install dependencies
         run: npm ci
 
+      # Uncomment if you have tests
       # - name: Run tests
-      #   run: npm run test
+      #   run: npm test
 
       - name: Build package
         run: npm run build
 
-      - name: Bump version and tag
+      - name: Bump version and push tag
         run: |
           npm version patch -m "chore(release): %s"
           git push origin HEAD --tags
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Configure npm auth
-        run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_WORKFLOW }}
 
       - name: Publish to npm
         run: npm publish --access public
