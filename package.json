@@ -21,5 +21,6 @@
     "test": "vitest run",
     "test:watch": "vitest watch",
     "prepublishOnly": "npm run test && npm run build"
-  }
+  },
+  "version": "0.0.1"
 }
