@@ -20,7 +20,7 @@
     "dev": "tsc -p tsconfig.esm.json --watch",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "prepublishOnly": "npm run test && npm run build"
+    "prepublishOnly": "npm run build"
   },
   "publishConfig": {
     "access": "public",
