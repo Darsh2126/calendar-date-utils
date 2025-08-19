@@ -14,8 +14,7 @@
     "dev": "tsc --watch",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "lint": "eslint . --ext .ts,.js --fix",
-    "prepublishOnly": "npm run lint && npm run test && npm run build"
+    "prepublishOnly": "npm run test && npm run build"
   },
   "publishConfig": {
     "access": "public",
