@@ -212,6 +212,26 @@ for (const week of matrix) {
 }
 ```
 
+## 🛠️ Troubleshooting: Type Suggestions in Vite/VSCode
+
+If you installed `calendar-date-utils` via npm and do not see type suggestions in VSCode, ensure your project's `tsconfig.json` includes:
+
+```json
+{
+  "compilerOptions": {
+    "moduleResolution": "Node"
+  }
+}
+```
+
+If you use Vite, this is usually set by default, but you can explicitly add it to avoid issues.
+
+If you see `"resolvePackageJsonExports": false` suggestion, you can ignore it—this package is compatible with Node-style resolution.
+
+For best results, restart VSCode after updating your `tsconfig.json`.
+
+### NOTE: This seems only appear for Vite based in other like Next it is getting suggestion
+
 ---
 
 ## 🛠️ Contributing
