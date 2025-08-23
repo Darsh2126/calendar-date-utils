@@ -18,29 +18,28 @@ export type CalendarDay = {
 export function getMonthMatrix(
   year: number,
   monthIndex: number
-): CalendarDay[][] {
+): CalendarDay[] {
   const firstDayOfMonth = new Date(year, monthIndex, 1);
   const lastDayOfMonth = new Date(year, monthIndex + 1, 0);
 
+  // Start from Sunday of the first visible week
   const startDate = new Date(firstDayOfMonth);
-  startDate.setDate(startDate.getDate() - startDate.getDay()); // Sunday start
+  startDate.setDate(startDate.getDate() - startDate.getDay());
 
+  // End at Saturday of the last visible week
   const endDate = new Date(lastDayOfMonth);
-  endDate.setDate(endDate.getDate() + (6 - endDate.getDay())); // Saturday end
+  endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
 
-  const matrix: CalendarDay[][] = [];
+  const days: CalendarDay[] = [];
   const current = new Date(startDate);
 
   while (current <= endDate) {
-    const week: CalendarDay[] = [];
-    for (let i = 0; i < 7; i++) {
-      week.push({
-        date: new Date(current),
-        isCurrentMonth: current.getMonth() === monthIndex,
-      });
-      current.setDate(current.getDate() + 1);
-    }
-    matrix.push(week);
+    days.push({
+      date: new Date(current),
+      isCurrentMonth: current.getMonth() === monthIndex,
+    });
+    current.setDate(current.getDate() + 1);
   }
-  return matrix;
+
+  return days; // 42 days max (6 weeks * 7 days)
 }

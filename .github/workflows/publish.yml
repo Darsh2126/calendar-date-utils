@@ -3,7 +3,7 @@ name: Publish to npm
 on:
   push:
     branches:
-      - main   # only run on pushes to main
+      - main # Only run on pushes to main
 
 permissions:
   contents: write
@@ -36,13 +36,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Optional: run tests explicitly here instead of relying on prepublishOnly
-      # - name: Run tests
-        # run: npm test
+      - name: Determine version bump
+        id: bump
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          echo "Latest commit: $COMMIT_MSG"
+
+          if [[ "$COMMIT_MSG" == *"#major"* ]]; then
+            echo "bump=major" >> $GITHUB_ENV
+          elif [[ "$COMMIT_MSG" == *"#minor"* ]]; then
+            echo "bump=minor" >> $GITHUB_ENV
+          else
+            echo "bump=patch" >> $GITHUB_ENV
+          fi
 
       - name: Bump version and push tag
         run: |
-          npm version patch -m "chore(release): %s"
+          npm version $bump -m "chore(release): %s"
           git push origin HEAD --tags
 
       - name: Publish to npm
