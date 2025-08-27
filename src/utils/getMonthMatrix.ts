@@ -4,6 +4,20 @@ export type CalendarDay = {
   isCurrentMonth: boolean;
 };
 
+export type MonthName =
+  | "January"
+  | "February"
+  | "March"
+  | "April"
+  | "May"
+  | "June"
+  | "July"
+  | "August"
+  | "September"
+  | "October"
+  | "November"
+  | "December";
+
 /**
  * Generate a 6x7 calendar matrix for rendering monthly views.
  * Includes days from previous and next month to fill weeks.
@@ -17,13 +31,18 @@ export type CalendarDay = {
  */
 export function getMonthMatrix(
   year: number,
-  monthIndex: number
+  month: number | MonthName
 ): CalendarDay[] {
+  // Handle month input as name or number (1-based)
+  const monthIndex =
+    typeof month === "string"
+      ? new Date(`${month} 1, ${year}`).getMonth() // Convert name to index
+      : month - 1; // Convert 1-based to 0-based
+
   const firstDayOfMonth = new Date(year, monthIndex, 1);
   const lastDayOfMonth = new Date(year, monthIndex + 1, 0);
 
-  // How many days from the previous month to show
-  const startDay = firstDayOfMonth.getDay(); // Sunday = 0
+  const startDay = firstDayOfMonth.getDay(); // Sunday=0
   const totalDaysInMonth = lastDayOfMonth.getDate();
 
   const days: CalendarDay[] = [];
@@ -39,15 +58,12 @@ export function getMonthMatrix(
     days.push({ date: new Date(year, monthIndex, i), isCurrentMonth: true });
   }
 
-  // 3. Add next month's leading days until we have 42 total
-  while (days.length < 42) {
-    const nextDate = new Date(
-      year,
-      monthIndex,
-      totalDaysInMonth + (days.length - startDay) + 1
-    );
-    days.push({ date: nextDate, isCurrentMonth: false });
+  // 3. Add next month's leading days
+  const nextMonthDays = 42 - days.length;
+  for (let i = 1; i <= nextMonthDays; i++) {
+    const d = new Date(year, monthIndex + 1, i);
+    days.push({ date: d, isCurrentMonth: false });
   }
 
-  return days; // Always 42 days
+  return days;
 }

@@ -1,4 +1,4 @@
-export type { CalendarDay } from "./utils/getMonthMatrix";
+export type { CalendarDay, MonthName } from "./utils/getMonthMatrix";
 
 export * from "./utils/addDays";
 export * from "./utils/addMonths";
