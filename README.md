@@ -54,7 +54,7 @@ const matrix = getMonthMatrix(2025, 7);
 const headers = getWeekdayNames("en-US", "short", 1); // ["Mon", "Tue", ...]
 
 // Format a single day
-const label = formatDate(matrix[0][0].date, "YYYY-MM-DD");
+const label = formatDate(matrix[0].date, "YYYY-MM-DD");
 
 // Navigate months
 const nextMonth = addMonths(new Date(2025, 7, 15), 1);
@@ -66,12 +66,12 @@ const nextMonth = addMonths(new Date(2025, 7, 15), 1);
 
 All functions are tree-shakeable and available from the top-level import.
 
-### `getMonthMatrix(year: number, monthIndex: number): CalendarDay[][]`
+### `getMonthMatrix(year: number, monthIndex: number | MonthName): CalendarDay[]`
 Generate a 6x7 calendar matrix for a given month. Includes trailing/leading days to fill weeks.
 
 - **year**: full year (e.g., 2025)
 - **monthIndex**: 0-based month (0 = Jan, 11 = Dec)
-- **returns**: a 2D array (weeks x days) of `CalendarDay`
+- **returns**: a array (weeks x days) of `CalendarDay`
 
 `CalendarDay` type:
 
@@ -82,12 +82,28 @@ type CalendarDay = {
 };
 ```
 
+```ts
+type MonthName = =
+  | "January"
+  | "February"
+  | "March"
+  | "April"
+  | "May"
+  | "June"
+  | "July"
+  | "August"
+  | "September"
+  | "October"
+  | "November"
+  | "December";
+```
+
 Example:
 
 ```ts
 const matrix = getMonthMatrix(2025, 7); // August 2025
-matrix[0][0].date;        // Date
-matrix[0][0].isCurrentMonth; // boolean
+matrix[0].date;        // Date
+matrix[0].isCurrentMonth; // boolean
 ```
 
 ### `getWeekdayNames(locale = "en-US", format = "short", weekStart: 0 | 1 = 0): string[]`
@@ -177,6 +193,65 @@ Return `true` if a date is outside `min`/`max` or matches a custom `exclude` pre
 ```ts
 isDateDisabled(new Date("2025-01-01"), { min: new Date("2025-01-10") }); // true
 ```
+
+### `getCurrentTiming(options)`
+
+
+### Description
+`getCurrentTiming` returns an object containing current date, time, and various formats (ISO, UTC, timestamp).  
+You can specify a locale and choose whether to include seconds in the formatted time.
+
+---
+
+### Parameters
+
+| Name            | Type                        | Required | Default  | Description                                    |
+|-----------------|---------------------------|----------|----------|------------------------------------------------|
+| `locale`        | `string`                  | No       | `'en-US'`| Locale for formatting day/time. E.g. `'fr-FR'`.|
+| `includeSeconds`| `boolean`                 | No       | `true`   | Whether to include seconds in time string.     |
+
+---
+
+### Return Type
+
+`CurrentTiming` object:
+
+| Key        | Type     | Description                                   |
+|------------|----------|-----------------------------------------------|
+| `year`     | `number` | Current year.                                |
+| `month`    | `number` | Month (1-12).                               |
+| `date`     | `number` | Date (1-31).                                |
+| `day`      | `string` | Day of the week.                            |
+| `time`     | `string` | Local time string.                          |
+| `timestamp`| `number` | Unix timestamp (ms since epoch).            |
+| `iso`      | `string` | ISO 8601 formatted date string.             |
+| `utc`      | `string` | UTC formatted date string.                  |
+
+---
+
+### Examples
+
+```ts
+import { getCurrentTiming } from './utils/time';
+
+// Default
+console.log(getCurrentTiming());
+/*
+{
+  year: 2025,
+  month: 8,
+  date: 23,
+  day: 'Saturday',
+  time: '02:45:12 PM',
+  timestamp: 1692791712000,
+  iso: '2025-08-23T09:15:12.000Z',
+  utc: 'Sat, 23 Aug 2025 09:15:12 GMT'
+}
+*/
+
+// Custom locale and no seconds
+console.log(getCurrentTiming({ locale: 'fr-FR', includeSeconds: false }));
+// { time: '14:45', ... }
 
 ---
 

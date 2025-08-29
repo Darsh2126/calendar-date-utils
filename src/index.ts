@@ -1,4 +1,9 @@
 export type { CalendarDay, MonthName } from "./utils/getMonthMatrix";
+export type {
+  CurrentTiming,
+  GetCurrentTimingOptions,
+  SupportedLocale,
+} from "./utils/getCurrentTimings";
 
 export * from "./utils/addDays";
 export * from "./utils/addMonths";
@@ -11,3 +16,4 @@ export * from "./utils/isDateDisabled";
 export * from "./utils/isSameDate";
 export * from "./utils/mergeDateAndTime";
 export * from "./utils/parseDate";
+export * from "./utils/getCurrentTimings";

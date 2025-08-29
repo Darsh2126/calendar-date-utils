@@ -24,10 +24,10 @@ export type MonthName =
  *
  * @param year - Full year (e.g., 2025)
  * @param monthIndex - 0-based month (0 = January, 11 = December)
- * @returns A flat array of 42 CalendarDay objects (6 weeks * 7 days)
+ * @returns A array of 42 CalendarDay objects (6 weeks * 7 days)
  *
  * @example
- * getMonthMatrix(2025, 7); // August 2025 as a flat array
+ * getMonthMatrix(2025, 7); // August 2025 as a array
  */
 export function getMonthMatrix(
   year: number,
